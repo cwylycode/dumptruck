@@ -1,0 +1,137 @@
+<!--Just another dumb snake game-->
+<!DOCTYPE html5>
+<html lang="en-US">
+    <head>
+        <title>Snake Game</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            #main-page{
+                background-color: white;
+            }
+            #container{
+                margin-left: auto;
+                margin-right: auto;
+            }
+            h1,h2,p{
+                font-family: Georgia, 'Times New Roman', Times, serif;
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+                padding-bottom: 1%;
+            }
+            #game-window{
+                background-color: black;
+                border: 2px solid green;
+                display: block;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body id="main-page">
+        <div id="container">
+            <h1>Simpl Snek Gaem</h1>
+            <h2>LOL...Play Snek. Good things will happen. You'll achieve clarity and oodles of pudding.</h2>
+            <p>Use 'arrow keys' and press 'enter' to pause (like that actually matters, right?)</p>
+            <canvas id="game-window" height="400" width="400"></canvas>
+            <script title="snake-game">
+                var game_fps = 15
+                var player_input_x = 0;
+                var player_input_y = 0;
+                var grid_size_x = 20;
+                var grid_size_y = 20;
+                var obj_size_sub = 2;
+                var snake = [];
+                var snake_tail_length = 4;
+                var snake_x = Math.floor(grid_size_x / 2) - 1;
+                var snake_y = Math.floor(grid_size_y / 2) - 1;
+                var apple_x = Math.floor(Math.random()*grid_size_x);
+                var apple_y = Math.floor(Math.random()*grid_size_y);
+                window.onload = function()
+                {
+                    game_window = document.getElementById("game-window");
+                    game_canvas = game_window.getContext("2d");
+                    document.addEventListener("keydown",KeyPressed);
+                    setInterval(Update, 1000/game_fps);
+                };
+                function Update()
+                {
+                    snake_x += player_input_x;
+                    snake_y += player_input_y;
+                    
+                    if(snake_x < 0) snake_x = grid_size_x - 1;
+                    if(snake_x > grid_size_x - 1) snake_x = 0;
+                    if(snake_y < 0) snake_y = grid_size_y - 1;
+                    if(snake_y > grid_size_y - 1) snake_y = 0;
+                    
+                    game_canvas.fillStyle = "black";
+                    game_canvas.fillRect(0,0,game_window.width,game_window.height);
+                    
+                    for(var i = 0; i < snake.length; i++)
+                    {
+                        game_canvas.fillStyle = "green";
+                        game_canvas.fillRect(snake[i].x*grid_size_x,snake[i].y*grid_size_y,grid_size_x-obj_size_sub,grid_size_y-obj_size_sub);
+                        if(snake[i].x == snake_x && snake[i].y == snake_y)
+                        {
+                            if (player_input_x == 0 && player_input_y == 0) continue;
+                            else snake_tail_length = 1;
+                        }
+                    }
+                    snake.push({x:snake_x,y:snake_y});
+                    while(snake.length > snake_tail_length) snake.shift();
+                    
+                    if(snake_x == apple_x && snake_y == apple_y)
+                    {
+                        snake_tail_length += 1;
+                        apple_x = Math.floor(Math.random()*grid_size_x);
+                        apple_y = Math.floor(Math.random()*grid_size_y);
+                    }
+                    game_canvas.fillStyle = "red";
+                    game_canvas.fillRect(apple_x*grid_size_x,apple_y*grid_size_y,grid_size_x-obj_size_sub,grid_size_y-obj_size_sub);
+                }
+                function KeyPressed(ev)
+                {
+                    switch(ev.keyCode)
+                    {
+                        case 13:
+                        alert("LOLOLOL you actually paused...it means you're paying attention!");
+                        break
+                        case 37:
+                        if (player_input_x != 1)
+                        {
+                            player_input_x = -1;
+                            player_input_y = 0;
+                        }
+                        break;
+                        case 38:
+                        if (player_input_y != 1)
+                        {
+                            player_input_x = 0;
+                            player_input_y = -1;
+                        }
+                        break;
+                        case 39:
+                        if (player_input_x != -1)
+                        {
+                            player_input_x = 1;
+                            player_input_y = 0;
+                        }
+                        break;
+                        case 40:
+                        if (player_input_y != -1)
+                        {
+                            player_input_x = 0;
+                            player_input_y = 1;
+                        }
+                        break;
+                    }
+                }
+            </script>
+        </div>
+    </body>
+</html>

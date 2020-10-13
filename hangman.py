@@ -1,4 +1,4 @@
-#Simple game of Hangman that runs in the terminal - by hexideci-male
+#Simple game of Hangman that runs in the terminal
 from os import system, name
 import random
 wordlist = [

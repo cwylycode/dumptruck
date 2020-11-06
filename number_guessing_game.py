@@ -35,6 +35,7 @@ def Game():
       prev_guess = guess
       print(f"{guess} is incorrect! - {hints[h]}\nHere's a clue: {clues[random.randint(0,len(clues)-1)]}\nScore: {score}\n")
       if score <= 0:
+        print(f"The number I was thinking of is {number}")
         GameOver()
         break
 def GameOver():

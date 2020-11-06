@@ -7,7 +7,6 @@ def convert_temperature(temp=0,from_scale="C",to_scale="F",rounding=1):
 
     scales = ["C","F","K","R","A"]
     if from_scale not in scales[:-1] or to_scale not in scales:return "Invalid scale input"
-
     if from_scale == "C":temps = [temp,(9/5)*temp+32,temp+273.15,(9/5)*(temp+273.15)]
     if from_scale == "F":temps = [(temp-32)*(5/9),temp,(temp+459.67)*(5/9),temp+459.67]
     if from_scale == "K":temps = [temp-273.15,(temp*(9/5)-459.67),temp,temp*(9/5)]

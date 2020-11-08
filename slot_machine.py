@@ -165,7 +165,6 @@ def play_slot_machine_game():
     RUNTIME = True
 
     class Game:
-        slots = []
         game_over = False
         spinning = False
         input_active = True
@@ -188,7 +187,7 @@ def play_slot_machine_game():
         l_dollar = ['$$$','   ','  $',' $$']
         r_dollar = ['$$$','   ','$  ','$$ ']
         table = ["",colorama.Back.WHITE]
-        
+
         @classmethod
         def animate(cls,machine:SlotMachine,anim_slots,anim_title,anim_table,anim_money,choices=[],result:_SlotItem=None):
             #Animate all the flashy bits and spin the reels as needed
@@ -314,10 +313,18 @@ def play_slot_machine_game():
     #Runtime
     while RUNTIME:
         #Initialize
-        Game.money_house = 800
+        Game.game_over = False
+        Game.spinning = False
+        Game.input_active = True
+        Game.current_prompt = 0
+        Game.current_bet = 0
+        Game.current_freespins = 0
+        Game.current_result = ""
         Game.money_player = 200
+        Game.money_house = 800
+
+        #Setup slot machine
         sm = SlotMachine(3)
-        Game.slots = []*10
         sm.item_add("Jackpot",[300,600,1000],"$",colorama.Fore.LIGHTWHITE_EX)
         sm.item_add("Lucky",[100,200,300],"7",colorama.Fore.LIGHTCYAN_EX)
         sm.item_add("Bell",[50,100,150],"&",colorama.Fore.LIGHTYELLOW_EX)
@@ -332,16 +339,16 @@ def play_slot_machine_game():
         sm.reel_setup(1,["Lucky"," ","Bar"," ","Wild"," ","Jewel"," ","Bell"," ","Coin"," ","Free Spins"," ","Cherry"," ","Jackpot"," "])
         sm.reel_setup(2,["Bell"," ","Jewel"," ","Free Spins"," ","Lucky"," ","Bar"," ","Coin"," ","Jackpot"," ","Wild"," ","Cherry"," "])
         slot_probability = {
-            "Jackpot":random.randint(1,10),
-            "Lucky":random.randint(2,10),
-            "Bell":random.randint(2,10),
-            "Cherry":random.randint(3,10),
-            "Bar":random.randint(4,10),
-            "Jewel":random.randint(4,10),
-            "Coin":random.randint(4,10),
-            "Wild":random.randint(5,10),
-            "Free Spins":random.randint(6,10),
-            " ":random.randint(1,5)
+            "Jackpot":random.randint(1,15),
+            "Lucky":random.randint(1,20),
+            "Bell":random.randint(1,25),
+            "Cherry":random.randint(1,40),
+            "Bar":random.randint(1,50),
+            "Jewel":random.randint(1,70),
+            "Coin":random.randint(1,60),
+            "Wild":random.randint(1,30),
+            "Free Spins":random.randint(1,50),
+            " ":random.randint(1,20)
         }
 
         #Game Loop
@@ -373,6 +380,7 @@ def play_slot_machine_game():
                         time.sleep(2)
                         continue
                     pi = input(prompts[Game.current_prompt])
+                    if "debug" in pi: Game.debug = not Game.debug
                     if Game.game_over:
                         if pi in ["y","Y","yes","YES","Yes"]:
                             break
@@ -387,7 +395,7 @@ def play_slot_machine_game():
                             if int(pi) > sm.credits_max or int(pi) < 1:
                                 err_msg = 2
                                 continue
-                            elif int(pi) > Game.money_player:
+                            elif int(pi) > Game.money_player and Game.current_freespins <= 0:
                                 err_msg = 3
                                 continue
                             else:
@@ -395,7 +403,7 @@ def play_slot_machine_game():
                                 Game.current_prompt = 1
                                 break
                         elif pi == "" and Game.current_prompt == 1:
-                            if Game.money_player < Game.current_bet:
+                            if Game.money_player < Game.current_bet and Game.current_freespins <= 0:
                                 err_msg = 3
                                 continue
                             sm.credits_inserted = Game.current_bet
@@ -418,7 +426,7 @@ def play_slot_machine_game():
                 Game.money_player -= Game.current_bet
 
             #Animate reels and title flashiness
-            if Game.debug: slot_choices = ["Wild","Lucky","Wild"]
+            if Game.debug: slot_choices = ["Wild","Wild","Jackpot"]
             else: slot_choices = random.choices([k for k in slot_probability.keys()],[v for v in slot_probability.values()],k=3)
             Animations.animate(sm,True,True,False,False,slot_choices)
 
@@ -445,7 +453,7 @@ def play_slot_machine_game():
                 draw_game()
 
             #Check current money
-            if Game.money_player <= 0:
+            if Game.money_player <= 0 and Game.current_freespins <= 0:
                 Game.game_over = True
                 Game.current_prompt = 2
             elif Game.money_house <= 0:

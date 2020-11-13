@@ -426,7 +426,7 @@ def play_slot_machine_game():
                 Game.money_player -= Game.current_bet
 
             #Animate reels and title flashiness
-            if Game.debug: slot_choices = ["Wild","Wild","Jackpot"]
+            if Game.debug: slot_choices = [" "," "," "]
             else: slot_choices = random.choices([k for k in slot_probability.keys()],[v for v in slot_probability.values()],k=3)
             Animations.animate(sm,True,True,False,False,slot_choices)
 
@@ -445,7 +445,7 @@ def play_slot_machine_game():
                 "$":f"HOLY CRAP! JACKPOT!!!"
             }
             result = sm.results(3,[2])
-            if result:
+            if result and result[0].symbol != "-":
                 Game.current_result = spin_results[result[0].symbol]
                 Animations.animate(sm,False,True,True,True,result=result[0])
             else:

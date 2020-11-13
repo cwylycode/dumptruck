@@ -166,7 +166,7 @@ def main():
         #Adding to list
         while True:
             clear_screen()
-            print("\nWhere should this product be inserted?")
+            print("\nWhere should this product be inserted?\n")
             print("1. Beginning of list")
             print("2. End of list")
             print("3. Before other product")

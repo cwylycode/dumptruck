@@ -1,9 +1,13 @@
-#Oh look...something actually useful
+# Oh look...something actually useful
+
 def convert_temperature(temp=0,from_scale="C",to_scale="F",rounding=1):
-    """Convert and return the supplied temperature in a different scale.
-    \n'C','F','K','R' = Celsius,Fahrenheit,Kelvin,Rakine
-    \n'A' = All temperature conversions as a list (only used with 'to_scale')
-    \n'rounding' = Round all temperatures to the nearest decimal place"""
+    """
+    Convert and return the supplied temperature in a different scale.\n
+    'C','F','K','R' = Celsius,Fahrenheit,Kelvin,Rakine\n
+    'A' = All temperature conversions as a list (only used with 'to_scale')\n
+    :rounding: Round all temperatures to the nearest decimal place\n
+    :return: A list or single value of converted temps.
+    """
 
     scales = ["C","F","K","R","A"]
     if from_scale not in scales[:-1] or to_scale not in scales:return "Invalid scale input"

@@ -1,4 +1,6 @@
-"""A grocery store linked list challenge that I found on some website. It was supposed to be homework for some college guy apparently, but I decided to do it on my own. LOL."""
+"""
+A grocery store linked list challenge that I found on some website. It was supposed to be homework for some college guy apparently, but I decided to do it on my own. LOL.
+"""
 
 class Node:
     def __init__(self,data):
@@ -119,9 +121,9 @@ def main():
     def products_add():
         entries = ["Name","Price","Stock"]
         new_product = {"name":None,"price":None,"stock":None}
-        #Product setup
+        # Product setup
         while True:
-            #Entries
+            # Entries
             i = 0
             while True:
                 clear_screen()
@@ -144,7 +146,7 @@ def main():
                     break
                 print(f"\nInvalid entry. Must be a {'whole ' if i == 2 else ''}{'word' if i == 0 else 'number'}.")
                 pause()
-            #Finalize
+            # Finalize
             redo = False
             while True:
                 clear_screen()
@@ -160,10 +162,10 @@ def main():
                 else:
                     print(f"\nInvalid entry. Must be a something resembling a 'yes' or a 'no'.")
                     pause()
-            #Do over or not
+            # Do over or not
             if redo: continue
             else: break
-        #Adding to list
+        # Adding to list
         while True:
             clear_screen()
             print("\nWhere should this product be inserted?\n")
@@ -173,15 +175,15 @@ def main():
             print("4. After other product")
             print("5. Exit and discard product")
             usr = prompt()
-            #Beginning
+            # Beginning
             if usr == "1":
                 products.add_start(Node(new_product))
                 break
-            #End
+            # End
             elif usr == "2":
                 products.add_end(Node(new_product))
                 break
-            #Before or After
+            # Before or After
             elif usr == "3" or usr == "4":
                 bfr = True if usr == "3" else False
                 while True:
@@ -198,14 +200,14 @@ def main():
                         pause()
                         continue
                 break
-            #Exit
+            # Exit
             elif usr == "5":
                 return
-            #Error
+            # Error
             else:
                 print("\nInvalid entry!")
                 pause()
-        #Finished
+        # Finished
         clear_screen()
         print("\nThe product has been added.")
         pause()
@@ -266,4 +268,5 @@ def main():
             pause()
             continue
 
-main()
+if __name__ == '__main__':
+    main()

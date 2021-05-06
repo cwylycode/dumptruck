@@ -1,7 +1,11 @@
-#This is a load of barnacles
+# This is a load of barnacles
+
 import random
 
 def spongebob_case(txt: str = ""):
+    '''
+    The sarcasm is strong. Embrace your inner mockery.
+    '''
     final = ""
     txt = txt.strip().lower()
     for i in range(0, len(txt)):
@@ -15,5 +19,6 @@ def spongebob_case(txt: str = ""):
             else: final += txt[i].lower()
     return final
 
-text = "You can't just come in here and make a Spongebob meme!"
-print(spongebob_case(text))
+if __name__ == '__main__':
+    text = "You can't just come in here and make a Spongebob meme!"
+    print(spongebob_case(text))

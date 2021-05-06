@@ -1,8 +1,8 @@
 import random
 
 def italianize(text:str,italianness:float=0.5):
-    """Italianize your English words! Make your text sound like a REAL Italian stereotype! It's fun for the whole family - and politically incorrect, too!\n
-    Italianness range is 0.0 to 1.0 (no changing words | all valid words get changed)
+    """Italianize your English words! Make your text sound like a REAL Italian stereotype! It's fun for the whole family - and needlessly offensive, too!\n
+    Italianness range is 0.0 - 1.0 (no changing words - all valid words get changed)
     """
     words = text.split(" ")
     for i,word in enumerate([w.lower() for w in words]):
@@ -23,5 +23,6 @@ def italianize(text:str,italianness:float=0.5):
                 if change: words[i] = words[i][:c+1] + "-a" + words[i][c+1:]
     return " ".join(words)
 
-t = "Hello. I would like a lot of spaghetti. Would you bring me a mushroom and some coins with the dish? Also, a peach salad for the princess as well, yes?"
-print(italianize(t))
+if __name__ == '__main__':
+    t = "Hello. I would like a lot of spaghetti. Would you bring me a mushroom and some coins with the dish? Also, a peach salad for the princess as well, yes?"
+    print(italianize(t))

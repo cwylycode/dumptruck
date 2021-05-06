@@ -1,4 +1,5 @@
-#A number guessing game in the console. Select your difficulty and guess a number till your score goes to zero.
+# A number guessing game in the console. Select your difficulty and guess a number till your score goes to zero.
+
 import random, os
 
 def Game():

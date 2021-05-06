@@ -1,4 +1,4 @@
-#Simpletons
+# Simpletons
 
 def simplify_fraction(fraction:str):
     try:
@@ -25,32 +25,32 @@ def fraction(number:float):
     if deci_count > 0:x = str(n*(10**deci_count))+"/"+str(1*(10**deci_count))
     return simplify_fraction(x)
 
-f = [
-    "10/11",
-    "100/400",
-    "4/6",
-    "8/4",
-    "5/2.5",
-    "3/18",
-    "10/15",
-    "6/5",
-    "88",
-]
-print(*[simplify_fraction(x) for x in f],sep='\n')
+# f = [
+#     "10/11",
+#     "100/400",
+#     "4/6",
+#     "8/4",
+#     "5/2.5",
+#     "3/18",
+#     "10/15",
+#     "6/5",
+#     "88",
+# ]
+# print(*[simplify_fraction(x) for x in f],sep='\n')
 
-d = [
-    0,
-    1,
-    2.5,
-    2.000041,
-    0.1,
-    0.2,
-    0.5,
-    10,
-    0.9,
-    0.01,
-    0.000008,
-    0.0001,
-    342.52,
-]
-print(*[fraction(x) for x in d],sep='\n')
+# d = [
+#     0,
+#     1,
+#     2.5,
+#     2.000041,
+#     0.1,
+#     0.2,
+#     0.5,
+#     10,
+#     0.9,
+#     0.01,
+#     0.000008,
+#     0.0001,
+#     342.52,
+# ]
+# print(*[fraction(x) for x in d],sep='\n')

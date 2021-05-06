@@ -1,7 +1,9 @@
-#Reinventing the wheel, one pointless line of code at a time
+# Reinventing the wheel, one pointless line of code at a time
 
 def random_lcg(minimum:int,maximum:int,seed:int=0):
-    """A random function using a linear congruential generator algorithm"""
+    """
+    A random function using a linear congruential generator algorithm.
+    """
     if minimum > maximum:
         raise ValueError("Minimum cannot be greater than maximum")
     a,c,m = 1664525,1013904223,(2**32)

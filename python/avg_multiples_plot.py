@@ -1,8 +1,12 @@
+# Plot out the average multiples that make up a product, both with and without primes being included.
+
 import matplotlib.pyplot as pplot
 
 def avg_multiples(number:int) -> (int,int):
-	"""Find the two closest whole numbers that multiply into the provided number.
-	eg. 72 = 8 * 9 | 50 = 5 * 10 | 43 = 1 * 43 (prime) etc"""
+	"""
+	Find the two closest whole numbers that multiply into the provided number.
+	eg. 72 = 8 * 9 | 50 = 5 * 10 | 43 = 1 * 43 (prime) etc
+	"""
 	n1,n2 = number,1
 	for i in range(2,int(number**0.5)+1):
 		if number / i == int(number/i):

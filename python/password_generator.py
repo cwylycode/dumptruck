@@ -1,3 +1,5 @@
+# What's the password? Password.
+
 import random
 
 min_len = 8
@@ -17,8 +19,9 @@ def generate_password(char_length:int):
         password.append(chars_list[c])
     return "".join(password)
 
-print("Generate a random password\n")
-initial = int(input(f"How many characters long should the password be? ({min_len}-{max_len})\n>"))
-while True:
-    print(f"Your password is: {generate_password(initial)}")
-    again = input("\nPress enter to try again.")
+if __name__ == '__main__':
+    print("Generate a random password\n")
+    while True:
+        initial = int(input(f"How many characters long should the password be? ({min_len}-{max_len})\n>"))
+        print(f"Your password is: {generate_password(initial)}")
+        again = input("\nPress enter to try again.")

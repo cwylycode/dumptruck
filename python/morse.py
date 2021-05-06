@@ -1,4 +1,4 @@
-#I honestly can't think of anything funny to say.
+# I honestly can't think of anything witty to say here.
 
 __code ={
         'A':".-",
@@ -71,7 +71,7 @@ def morse_encode(message:str):
     return string.strip()
 
 def morse_decode(message:str):
-    """Decode a morse message. Message must contain (with no spacing between chars) periods or hyphens(minus symbol) or forward slashes/astericks. Any other chars - including incorrect morse code - will be stripped out from the decoded message'. A single space must be used to separate each letter.\n
+    """Decode a morse message. Message must contain (with no spacing between chars) periods or hyphens(minus symbol) or forward slashes/astericks. Any other chars - including incorrect morse code - will be stripped out from the decoded message'. A single space must be used to separate each character.\n
     All decoded alpha chars will be capitalized. Any forward slashes will be interpreted as a single space, and astericks will be decoded as ' \<err\> ' to mark an illegal character in the message.
     """
     chars,string = message.strip().split(" "),""

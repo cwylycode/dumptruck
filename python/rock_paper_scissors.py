@@ -1,4 +1,5 @@
-#'Probably overcomplicated' code for a game of rock, paper, scissors - oh well
+# 'Probably overcomplicated' code for a game of rock, paper, scissors - oh well
+
 import random,os
 
 running = True

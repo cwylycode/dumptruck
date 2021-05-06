@@ -1,6 +1,9 @@
-#Ring ring ring...banana phone
+# Ring ring ring...banana phone
+
 def phone_letter_combos(nums):
-    """Return all possible letter combinations found on a phone pad from integers entered."""
+    """
+    Return all possible letter combinations found on a phone pad from integers entered.
+    """
     combos = {
         "0": ["_"],
         "1": [""],

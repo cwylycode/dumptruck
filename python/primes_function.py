@@ -1,7 +1,10 @@
-# Optimus Primes
+# Optimus Primes - can probably be better, but, ugh...
 import math
 
 def primes(count:int):
+    '''
+    Get prime number at count.
+    '''
     i = 1
     p = 0
     while i <= count:

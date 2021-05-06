@@ -150,11 +150,11 @@ class _Reel:
             if self._slots[i].name == item_name:
                 self._slots[i] = []
 
-#Slot machine mini-game
+# Slot machine mini-game
 def play_slot_machine_game():
     """Mini-game that plays in the terminal using a slot machine object. Enjoy!"""
 
-    #Begin
+    # Begin
     use_termios = False
     try: import msvcrt
     except ImportError:
@@ -190,7 +190,7 @@ def play_slot_machine_game():
 
         @classmethod
         def animate(cls,machine:SlotMachine,anim_slots,anim_title,anim_table,anim_money,choices=[],result:_SlotItem=None):
-            #Animate all the flashy bits and spin the reels as needed
+            # Animate all the flashy bits and spin the reels as needed
             def interval(speed,cycle=[0],instant_start=True):
                 t = (time.time() + 1 / (speed * len(cycle))) if not instant_start else time.time()
                 while True:
@@ -212,7 +212,7 @@ def play_slot_machine_game():
             cr = 0
             while True:
                 draw_game()
-                #Reels
+                # Reels
                 if anim_slots:
                     Game.spinning = True
                     spin_dir = 1
@@ -227,7 +227,7 @@ def play_slot_machine_game():
                     if all(reel_stopped):
                         Game.spinning = False
                         break
-                #Title
+                # Title
                 if anim_title:
                     if next(spinny[0]):
                         spinny[1] = (spinny[1]+1) % len(cls.l_spin)
@@ -237,12 +237,12 @@ def play_slot_machine_game():
                         dollar[1] = (dollar[1]+1) % len(cls.l_dollar)
                         cls.ldv = cls.l_dollar[dollar[1]]
                         cls.rdv = cls.r_dollar[dollar[1]]
-                #Table
+                # Table
                 if anim_table:
                     if next(table_blink[0]):
                         table_blink[1] = (table_blink[1]+1) % len(cls.table)
                         cls.tv[table_cell] = cls.table[table_blink[1]]
-                #Money
+                # Money
                 if anim_money:
                     if next(money_factor):
                         if result.name == "Free Spins":
@@ -259,7 +259,7 @@ def play_slot_machine_game():
                             if Game.money_player >= orig_pay + payout:
                                 Game.money_player = orig_pay + payout
                                 break
-            #Cleanup
+            # Cleanup
             cls.lsv = cls.l_spin[0]
             cls.rsv = cls.r_spin[0]
             cls.ldv = cls.l_dollar[0]
@@ -275,44 +275,44 @@ def play_slot_machine_game():
                 msvcrt.getch()
 
     def draw_game():
-        #Clear screen of stuff
+        # Clear screen of stuff
         if os.name == "nt": os.system("cls")
         else: os.system("clear")
-        #Value assignment
+        # Value assignment
         lsv = Animations.lsv
         rsv = Animations.rsv
         ldv = Animations.ldv
         rdv = Animations.rdv
         tv = Animations.tv
         r = lambda x,y: f"{sm.reels[x].slots[y].color}{sm.reels[x].slots[y].symbol}{colorama.Style.RESET_ALL}"
-        #Draw slot machine and payout table
+        # Draw slot machine and payout table
         print(f"{IND1+IND2*2}{lsv} Welcome to the {ldv}Lucky Terminal{rdv} slot machine! {rsv}\n")
         print(f"{IND1}-------------------{IND2*4}-----------------------------------")
         print(f"{IND1}|  {r(0,0)}  |  {r(1,0)}  |  {r(2,0)}  |{IND2*4}{tv[0]}{sm.items['Jackpot'].color}| $$$ | 300/600/1000 |    Jackpot |")
         print(f"{IND1}|  {r(0,1)}  |  {r(1,1)}  |  {r(2,1)}  |{IND2*4}{tv[1]}{sm.items['Lucky'].color}| 777 | 100/200/300  |      Lucky |")
         print(f"{IND1}|  {r(0,2)}  |  {r(1,2)}  |  {r(2,2)}  | <-- Payline{IND1*4}{tv[2]}{sm.items['Bell'].color}| &&& | 50/100/150   |       Bell |")
         print(f"{IND1}|  {r(0,3)}  |  {r(1,3)}  |  {r(2,3)}  |{IND2*4}{tv[3]}{sm.items['Cherry'].color}| %%% | 20/40/60     |     Cherry |")
-        print(f"{IND1}|  {r(0,4)}  |  {r(1,4)}  |  {r(2,4)}  |{IND2*4}{tv[4]}{sm.items['Bar'].color}| ### | 10/20/30     |        Bar |")
+        print(f"{IND1}|  {r(0,4)}  |  {r(1,4)}  |  {r(2,4)}  |{IND2*4}{tv[4]}{sm.items['Bar'].color}| # # #  | 10/20/30     |        Bar |")
         print(f"{IND1}-------------------{IND2*4}{tv[5]}{sm.items['Jewel'].color}| +++ | 5/10/15      |      Jewel |")
         print(f"{IND1}{IND2*7+IND1*2}{tv[6]}{sm.items['Coin'].color}| @@@ | 2/4/6        |       Coin |")
         print(f"{IND1}{IND2*7+IND1*2}{tv[7]}{sm.items['Wild'].color}| ??? | 1/2/3        |       Wild |")
         print(f"{IND1}{IND2*7+IND1*2}{tv[8]}{sm.items['Free Spins'].color}| !!! | (1)/(2)/(3)  | Free Spins |")
         print(f"{IND1}-------------------{IND2*4}-----------------------------------")
-        #Draw money area
+        # Draw money area
         print(f"{IND1}The House: {Game.money_house}")
         print(f"{IND1}You: {Game.money_player}")
         print(f"\n{IND1}Credits: {sm.credits_inserted}")
         print(f"{IND1}Free Spins: {Game.current_freespins}")
         print(f"{IND1}-------------------\n")
-        #Spinning and result state
+        # Spinning and result state
         if Game.spinning: print(f"{IND1}Spinning...\n")
         elif Game.current_result: print(f"{IND1}{Game.current_result}\n")
-        #60 fps max refresh rate - prevents console flickering
+        # 60 fps max refresh rate - prevents console flickering
         time.sleep(1/60)
 
-    #Runtime
+    # Runtime
     while RUNTIME:
-        #Initialize
+        # Initialize
         Game.game_over = False
         Game.spinning = False
         Game.input_active = True
@@ -323,13 +323,13 @@ def play_slot_machine_game():
         Game.money_player = 200
         Game.money_house = 800
 
-        #Setup slot machine
+        # Setup slot machine
         sm = SlotMachine(3)
         sm.item_add("Jackpot",[300,600,1000],"$",colorama.Fore.LIGHTWHITE_EX)
         sm.item_add("Lucky",[100,200,300],"7",colorama.Fore.LIGHTCYAN_EX)
         sm.item_add("Bell",[50,100,150],"&",colorama.Fore.LIGHTYELLOW_EX)
         sm.item_add("Cherry",[20,40,60],"%",colorama.Fore.LIGHTRED_EX)
-        sm.item_add("Bar",[10,20,30],"#",colorama.Fore.LIGHTWHITE_EX)
+        sm.item_add("Bar",[10,20,30],"# ",colorama.Fore.LIGHTWHITE_EX)
         sm.item_add("Jewel",[5,10,15],"+",colorama.Fore.LIGHTBLUE_EX)
         sm.item_add("Coin",[2,4,6],"@",colorama.Fore.LIGHTMAGENTA_EX)
         sm.item_add("Wild",[1,2,3],"?",colorama.Fore.LIGHTGREEN_EX,is_wild=True)
@@ -351,12 +351,12 @@ def play_slot_machine_game():
             " ":random.randint(1,20)
         }
 
-        #Game Loop
+        # Game Loop
         while True:
-            #Initial draw
+            # Initial draw
             draw_game()
 
-            #Player input
+            # Player input
             if Game.input_active:
                 prompts = [
                     f"{IND1}Place a bet and press 'Enter' to spin the slots!\n{IND1}(You can also put in 'Q' at any time to quit)\n{IND1}>",
@@ -415,22 +415,22 @@ def play_slot_machine_game():
                             err_msg = 1
                             continue
 
-            #Stop game if we aren't playing anymore
+            # Stop game if we aren't playing anymore
             if not RUNTIME or Game.game_over: break
 
-            #Handle money and freebies
+            # Handle money and freebies
             if Game.current_freespins > 0:
                 Game.current_freespins -= 1
             else:
                 Game.money_house += Game.current_bet
                 Game.money_player -= Game.current_bet
 
-            #Animate reels and title flashiness
+            # Animate reels and title flashiness
             if Game.debug: slot_choices = [" "," "," "]
             else: slot_choices = random.choices([k for k in slot_probability.keys()],[v for v in slot_probability.values()],k=3)
             Animations.animate(sm,True,True,False,False,slot_choices)
 
-            #Display results, payout and animate
+            # Display results, payout and animate
             draw_game()
             spin_results = {
                 "-":f"Too bad.",
@@ -438,7 +438,7 @@ def play_slot_machine_game():
                 "?":f"Whoa, that's wild...",
                 "@":f"Ka-ching!",
                 "+":f"Ooh...Shiny!",
-                "#":f"Way to raise the bar!",
+                "# ":f"Way to raise the bar!",
                 "%":f"Eat, drink and be Cherry!",
                 "&":f"You are for whom the bell tolls!",
                 "7":f"Killer Seven Wooooo!!!",
@@ -452,7 +452,7 @@ def play_slot_machine_game():
                 Game.current_result = spin_results["-"]
                 draw_game()
 
-            #Check current money
+            # Check current money
             if Game.money_player <= 0 and Game.current_freespins <= 0:
                 Game.game_over = True
                 Game.current_prompt = 2
@@ -460,12 +460,12 @@ def play_slot_machine_game():
                 Game.game_over = True
                 Game.current_prompt = 3
 
-            #Cleanup
+            # Cleanup
             sm.credits_inserted = 0
             Game.current_result = ""
             time.sleep(1)
             flush_input()
-    #End
+    # End
 
 if __name__ == "__main__":
     play_slot_machine_game()

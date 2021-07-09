@@ -292,7 +292,7 @@ def play_slot_machine_game():
         print(f"{IND1}|  {r(0,1)}  |  {r(1,1)}  |  {r(2,1)}  |{IND2*4}{tv[1]}{sm.items['Lucky'].color}| 777 | 100/200/300  |      Lucky |")
         print(f"{IND1}|  {r(0,2)}  |  {r(1,2)}  |  {r(2,2)}  | <-- Payline{IND1*4}{tv[2]}{sm.items['Bell'].color}| &&& | 50/100/150   |       Bell |")
         print(f"{IND1}|  {r(0,3)}  |  {r(1,3)}  |  {r(2,3)}  |{IND2*4}{tv[3]}{sm.items['Cherry'].color}| %%% | 20/40/60     |     Cherry |")
-        print(f"{IND1}|  {r(0,4)}  |  {r(1,4)}  |  {r(2,4)}  |{IND2*4}{tv[4]}{sm.items['Bar'].color}| # # #  | 10/20/30     |        Bar |")
+        print(f"{IND1}|  {r(0,4)}  |  {r(1,4)}  |  {r(2,4)}  |{IND2*4}{tv[4]}{sm.items['Bar'].color}| ### | 10/20/30     |        Bar |")
         print(f"{IND1}-------------------{IND2*4}{tv[5]}{sm.items['Jewel'].color}| +++ | 5/10/15      |      Jewel |")
         print(f"{IND1}{IND2*7+IND1*2}{tv[6]}{sm.items['Coin'].color}| @@@ | 2/4/6        |       Coin |")
         print(f"{IND1}{IND2*7+IND1*2}{tv[7]}{sm.items['Wild'].color}| ??? | 1/2/3        |       Wild |")
@@ -329,7 +329,7 @@ def play_slot_machine_game():
         sm.item_add("Lucky",[100,200,300],"7",colorama.Fore.LIGHTCYAN_EX)
         sm.item_add("Bell",[50,100,150],"&",colorama.Fore.LIGHTYELLOW_EX)
         sm.item_add("Cherry",[20,40,60],"%",colorama.Fore.LIGHTRED_EX)
-        sm.item_add("Bar",[10,20,30],"# ",colorama.Fore.LIGHTWHITE_EX)
+        sm.item_add("Bar",[10,20,30],"#",colorama.Fore.LIGHTWHITE_EX)
         sm.item_add("Jewel",[5,10,15],"+",colorama.Fore.LIGHTBLUE_EX)
         sm.item_add("Coin",[2,4,6],"@",colorama.Fore.LIGHTMAGENTA_EX)
         sm.item_add("Wild",[1,2,3],"?",colorama.Fore.LIGHTGREEN_EX,is_wild=True)
@@ -426,7 +426,7 @@ def play_slot_machine_game():
                 Game.money_player -= Game.current_bet
 
             # Animate reels and title flashiness
-            if Game.debug: slot_choices = [" "," "," "]
+            if Game.debug: slot_choices = ["Jackpot","Jackpot","Jackpot"]
             else: slot_choices = random.choices([k for k in slot_probability.keys()],[v for v in slot_probability.values()],k=3)
             Animations.animate(sm,True,True,False,False,slot_choices)
 
@@ -438,7 +438,7 @@ def play_slot_machine_game():
                 "?":f"Whoa, that's wild...",
                 "@":f"Ka-ching!",
                 "+":f"Ooh...Shiny!",
-                "# ":f"Way to raise the bar!",
+                "#":f"Way to raise the bar!",
                 "%":f"Eat, drink and be Cherry!",
                 "&":f"You are for whom the bell tolls!",
                 "7":f"Killer Seven Wooooo!!!",

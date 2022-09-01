@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>FizzBuzzer - For all your fizzbuzzing needs!</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    body {
+      background-color: antiquewhite;
+      padding: 0 1rem;
+    }
+
+    #results-table.show {
+      display: table;
+    }
+
+    #results-msg {
+      visibility: hidden;
+      margin-bottom: 2rem;
+    }
+
+    #results-msg.show {
+      visibility: visible;
+    }
+
+    h1,
+    h4,
+    p {
+      text-align: center;
+    }
+
+    h4 {
+      padding: 1rem 0;
+    }
+
+    header {
+      padding: 2rem 0;
+    }
+
+    footer {
+      padding-bottom: 1rem;
+    }
+
+    .input-container {
+      display: flex;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+
+    .input-box {
+      width: 200px;
+      padding: 1rem;
+    }
+
+    input {
+      display: block;
+      text-align: right;
+      width: 100%;
+      color: #333;
+      font-size: 1.5rem;
+      margin: 5px auto;
+      padding: 1rem;
+      border: none;
+      border-radius: 0.5rem;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    button {
+      align-self: center;
+      padding: 1rem;
+      font-size: 2rem;
+      width: 100px;
+      height: 100px;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 100%;
+      background: #a73f2d;
+      cursor: pointer;
+      transition: background 0.5s;
+    }
+
+    button:hover {
+      background: #e99485;
+    }
+
+    .results-container {
+      margin: 5rem 0;
+    }
+
+    table {
+      display: none;
+      width: fit-content;
+      margin: auto;
+      border: 1px solid lightgrey;
+      border-collapse: collapse;
+      border-spacing: 0;
+    }
+
+    th,
+    td {
+      text-align: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid lightgrey;
+    }
+
+    th {
+      background-color: #a73f2d;
+      color: white;
+      width: 100px;
+      text-align: left;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      padding-left: 1rem;
+    }
+
+    th:nth-child(2) {
+      text-align: right;
+      padding-left: 0;
+      padding-right: 1rem;
+    }
+
+    tr:nth-child(2n+1) {
+      background-color: white;
+    }
+
+    hr {
+      margin: auto;
+      width: 90%;
+      max-width: 1000px;
+      opacity: 0.5;
+    }
+
+    @media screen and (max-width:580px) {
+      .input-container {
+        flex-direction: column;
+      }
+
+      .input-box {
+        width: 100%;
+        padding: 1rem 0;
+      }
+
+      button {
+        align-self: unset;
+        margin: 1.5rem 0;
+        width: 100%;
+        height: 75px;
+        border-radius: 0.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>FizzBuzzer!</h1>
+    <h4>The popular coding challenge, now in an easy-to-use format.</h4>
+  </header>
+  <p>Instructions: Put a whole number, between 1-1000, into each of the boxes below and press the "Run" button.</p>
+  <div class="input-container">
+    <div class="input-box">
+      <label>Fizz</label>
+      <input id="fizz-input" onclick="this.setSelectionRange(0,this.value.length)" placeholder="3">
+    </div>
+    <div class="input-box">
+      <label>Buzz</label>
+      <input id="buzz-input" onclick="this.setSelectionRange(0,this.value.length)" placeholder="5">
+    </div>
+    <div class="input-box">
+      <label>Length</label>
+      <input id="length-input" onclick="this.setSelectionRange(0,this.value.length)" placeholder="10">
+    </div>
+    <button onclick="run()">Run</button>
+  </div>
+  <div class="results-container">
+    <p id="results-msg">#</p>
+    <table id="results-table">
+      <tbody></tbody>
+    </table>
+  </div>
+  <footer>
+    <hr />
+    <h4> For more information about "FizzBuzz" see it on <a href="https://leetcode.com/problems/fizz-buzz/"
+        target="_blank" referrerpolicy="no-referrer">LeetCode</a>
+    </h4>
+  </footer>
+
+  <script>
+    let isRunning = false
+    let fizz = document.getElementById("fizz-input")
+    let buzz = document.getElementById("buzz-input")
+    let length = document.getElementById("length-input")
+    let table = document.getElementById("results-table")
+    let msg = document.getElementById("results-msg")
+    window.onload = function () {
+      fizz.value = ''
+      buzz.value = ''
+      length.value = ''
+    }
+    function run() {
+      if (isRunning) return
+      isRunning = true
+      msg.classList.add('show')
+      msg.innerHTML = "Thinking..."
+      table.classList.remove('show')
+      table.firstElementChild.innerHTML = "<tr><th>Number</th><th>Value</th></tr>"
+      setTimeout(() => {
+        for (let v of [fizz, buzz, length]) {
+          if (v.value && (
+            !/^[1-9][0-9]*$/.test(v.value) ||
+            v.value <= 0 ||
+            v.value > 1000
+          )) {
+            msg.innerHTML = "Reading comprehension is an important skill to have! Please read the instructions <strong><em>carefully</em></strong> and try again."
+            isRunning = false
+            return
+          }
+        }
+        if (!fizz.value) fizz.value = fizz.placeholder
+        if (!buzz.value) buzz.value = buzz.placeholder
+        if (!length.value) length.value = length.placeholder
+        for (let n = 1; n <= length.value; n++) {
+          let data = ''
+          if (n % fizz.value == 0 && n % buzz.value == 0) data = 'FizzBuzz!'
+          else if (n % fizz.value == 0) data = 'Fizz'
+          else if (n % buzz.value == 0) data = 'Buzz'
+          else data = n
+          table.firstElementChild.innerHTML += `
+          <tr>
+            <td>${n}</td><td>${data}</td>
+          </tr>`
+        }
+        msg.innerHTML = "<strong>Success! Here are the results.</strong>"
+        table.classList.add('show')
+        isRunning = false
+      }, 500);
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--
+    Okay, so, you know that mini-game in Zelda: Majora's Mask? The one where the postman plays a time-guessing game with you so you can win a piece of heart from him? Yeah, it's that game but with more depth...kinda.
+    
+    No bunny hood to help you - sorry!
+-->
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Stopping Game</title>
+  <link rel="stylesheet" href="https://unpkg.com/simpledotcss/simple.min.css">
+  <style>
+    :root {
+      --accent: rgb(43, 69, 164);
+      --error-red: rgb(214, 32, 32);
+      --timer-btn-start: rgb(56, 135, 56);
+      --timer-btn-start-light: rgb(58, 236, 58);
+      --timer-btn-stop: rgb(199, 16, 16);
+      --timer-btn-stop-light: rgb(202, 144, 144);
+    }
+
+    @media (prefers-color-scheme:dark) {
+      :root {
+        --accent: rgb(30, 255, 255);
+        --error-red: rgb(233, 73, 73);
+        --timer-btn-start: rgb(59, 204, 125);
+        --timer-btn-start-light: rgb(153, 255, 153);
+        --timer-btn-stop: rgb(221, 67, 67);
+        --timer-btn-stop-light: rgb(255, 144, 144);
+      }
+    }
+
+    .unselectable * {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .error-text {
+      color: var(--error-red);
+    }
+
+    body>header {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+
+    header>h2 {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    section {
+      margin-top: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p {
+      text-align: center;
+    }
+
+    button:focus {
+      filter: none;
+    }
+
+    input[type='radio'] {
+      border: 2px solid var(--border);
+      margin: 0.5rem;
+      padding: 1.2rem;
+      cursor: pointer;
+      transition: all 0.5s;
+    }
+
+    input[type="radio"]::after,
+    input[type="radio"]:checked::after {
+      content: attr(value);
+      width: 100%;
+      height: 76%;
+      border-radius: 100%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      font-size: 1.5rem;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      background-color: unset;
+    }
+
+    input[type="radio"]:checked::after {
+      color: var(--bg);
+    }
+
+    #lvl-btns {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+    }
+
+    #timer-btn {
+      overflow: hidden;
+      position: relative;
+      background-color: var(--timer-btn-start);
+      margin: auto;
+      padding: 1rem;
+      width: 90%;
+      max-width: 300px;
+      border-radius: 10rem;
+      font-size: xx-large;
+      font-weight: 900;
+      transition: all 0.5s;
+    }
+
+    #timer-btn.timer-active {
+      background-color: var(--timer-btn-stop);
+    }
+
+    #timer-btn::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 300%;
+      border-radius: 100%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: all 0.7s;
+      background-color: var(--timer-btn-start-light);
+    }
+
+    #timer-btn.timer-active:before {
+      background-color: var(--timer-btn-stop-light);
+    }
+
+    #timer-btn:active::before {
+      opacity: 1;
+      transition: 0s;
+      width: 0%;
+      height: 0%;
+    }
+
+    #timer {
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      font-size: 6rem;
+    }
+
+    #results-msg {
+      transform: scale(0);
+      margin-bottom: 0;
+      margin-top: 2rem;
+      min-height: 5.5rem;
+    }
+
+    #highscore {
+      display: flex;
+      justify-content: space-between;
+      max-width: 15rem;
+      margin: auto;
+    }
+
+    #highscore>h4 {
+      margin-top: 0;
+    }
+
+    #score-txt {
+      color: var(--accent);
+    }
+
+    #timer,
+    #score-txt {
+      font-family: Verdana, Geneva, Tahoma, sans-serif
+    }
+
+    #video {
+      display: flex;
+      justify-content: center;
+      margin-top: 5rem;
+    }
+
+    #video iframe {
+      box-shadow: 0 0 2rem black;
+    }
+
+    #emojis>p {
+      display: inline;
+    }
+
+    @media screen and (max-width:400px) {
+      header>h2 {
+        font-size: larger;
+      }
+
+      #timer {
+        font-size: 3rem;
+      }
+
+      #emojis>p {
+        display: block;
+        margin: 0;
+      }
+
+      #video iframe {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    @keyframes fadeout {
+      0% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    .fadeout {
+      animation-name: fadeout;
+      animation-delay: 2s;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+
+    @keyframes blink {
+      50% {
+        visibility: hidden;
+      }
+
+      100% {
+        visibility: inherit;
+      }
+    }
+
+    .blink {
+      animation-name: blink;
+      animation-iteration-count: 6;
+      animation-duration: 0.25s;
+      animation-timing-function: step-start;
+    }
+
+    @keyframes scaleup {
+      0% {
+        transform: scale(0);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .scaleup {
+      animation-name: scaleup;
+      animation-timing-function: ease-in-out;
+      animation-duration: 0.5s;
+      animation-fill-mode: forwards;
+    }
+  </style>
+  <script>
+    // Favicon
+    const link = document.createElement("link")
+    link.rel = "shortcut icon"
+    link.type = "image/svg+xml"
+    link.href = "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>" + "⏱" + "</text></svg>"
+    document.head.appendChild(link)
+  </script>
+</head>
+
+<body>
+  <header>
+    <h2>
+      <span style="color: var(--accent);">Hello!</span> It's The Time Stopping Game!
+    </h2>
+  </header>
+  <main>
+    <section id="game" class="unselectable">
+      <div id="lvl-btns">
+        <input id="lvl-5" type="radio" name="levels" value="5">
+        <input id="lvl-10" type="radio" name="levels" value="10">
+        <input id="lvl-30" type="radio" name="levels" value="30">
+        <input id="lvl-60" type="radio" name="levels" value="60">
+      </div>
+      <h1 id="timer">0:00</h1>
+      <div style="display: flex;">
+        <button id="timer-btn">LOL!</button>
+      </div>
+      <p id="results-msg">Time is on your side</p>
+      <div id="highscore">
+        <h4>HIGHSCORE</h4>
+        <h4 id="score-txt">4:20</h4>
+      </div>
+    </section>
+    <section id="rules">
+      <h3>RULES</h3>
+      <p>
+        Find out how good you are at guessing how many seconds have passed! Simply select a time target then hit START! Note that, once the timer starts, it will vanish after the first two seconds! You'll have to use your intuition to guess how much time has passed beyond that point!
+      </p>
+      <p>
+        The objective is to get as close to the target time as possible without going over when you hit STOP! If you go over, you get nothing! You lose! Good day, sir! But if not, you might get into the high score and you can give yourself a backrub as a congratulations!
+      </p>
+    </section>
+    <section id="about">
+      <h3>ABOUT</h3>
+      <p>
+        If you need help with understanding what this game is about (and the inspiration for it as well), watch this video for more information.
+      </p>
+      <div id="video">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/fPclBxerOnI" title="Zelda Majoras Mask Postman Game" frameborder="0" allowfullscreen></iframe>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div id="emojis">
+      <p>Made with ❤️</p>
+      <p> & </p>
+      <p>😤😫🍕🤮🧠⚡🤔💡😄</p>
+    </div>
+    <p>Colin Wyly - <a href="https://github.com/cwylycode" referrerpolicy="no-referrer">cwylycode</a></p>
+  </footer>
+
+  <script>
+    // Globals
+    let canPressButton = true
+    let timerActive = false
+    let timerID = 0
+    let timeStart = 0
+    let timeElapsed = 0
+    let currentLevel = 0
+    let scores = {}
+
+    const timerRef = document.getElementById("timer")
+    const buttonRef = document.getElementById("timer-btn")
+    const msgRef = document.getElementById("results-msg")
+    const scoreTxtRef = document.getElementById("score-txt")
+
+    // DEBUG
+    const BUNNY_HOOD = false
+
+    function randomInt(min = 0, max = 10, inclusiveMax = false) {
+      const i = inclusiveMax ? 1 : 0
+      return parseInt(Math.floor(Math.random() * (max - min + i)) + min)
+    }
+
+    function convertTime(t) {
+      // Realtime into seconds:deciseconds display
+      const s = parseInt(t / 1000)
+      const d = parseInt((t % 1000) / 10)
+      return s + ":" + (d < 10 ? "0" + d : d)
+    }
+
+    function timerStart() {
+      reset()
+      timerActive = true
+      buttonUpdate()
+      timeStart = Date.now()
+      timerID = setInterval(() => {
+        timeElapsed = Date.now() - timeStart
+        if (timeElapsed >= 99999) {
+          timerRef.innerHTML = "99:99"
+          timerStop()
+          return
+        }
+        // Render timer display
+        timerRef.innerHTML = convertTime(timeElapsed)
+      }, 10);
+      timerFade(true)
+    }
+
+    function timerStop() {
+      timerActive = false
+      buttonUpdate()
+      clearInterval(timerID)
+      timerFade(false)
+      // handle scoring and results
+      const t = parseInt(timeElapsed / 10)
+      const levelMax = currentLevel * 100
+      function showRandMsg(msgs) {
+        // Pick a random message for the results
+        displayMsg(msgs[randomInt(0, msgs.length)])
+      }
+      let messages = []
+      if (t > levelMax) {
+        // Fail.
+        timerRef.classList.add("error-text")
+        if (timeElapsed >= 99999) {
+          messages = [
+            "Forgot to hit that stop button, eh? Ha!",
+            "End of the line, buckaroo.",
+            "You failed so hard, even the timer gave up on you."
+          ]
+        } else if (t >= levelMax * 2) {
+          messages = [
+            "Waaay out there. Too bad.",
+            "Might need to get your head checked.",
+            "You went over by at least double the target! Yikes!"
+          ]
+        } else if (t >= levelMax + 100) {
+          messages = [
+            "You went over. Better luck next time!",
+            "Welp...darn.",
+            "Seems you waited too long."
+          ]
+        } else {
+          messages = [
+            "AAH! Soooo cloooose. But you went over. Sorry!",
+            "You almost had it. Just weren't quick enough!",
+            "Man, so close yet so far. Try again!"
+          ]
+        }
+      } else {
+        // Success!
+        if (t < 10) {
+          messages = [
+            "W-What?! H-How did you stop the timer so fast?!",
+            "Umm...the idea is to get close to the target time, not zero.",
+            "This ain't whack-a-mole! Stop that!"
+          ]
+        } else if (t == levelMax) {
+          messages = [
+            "Congratulations! Right on the dot!",
+            "Unbelievable! You did it! Give yourself that backrub!",
+            "You are a master of timing instincts!"
+          ]
+        } else if (t < 100) {
+          messages = [
+            "Oops...jumped the gun, didja?",
+            "Did you accidentally press the button twice?",
+            "You won't win if you don't have patience."
+          ]
+        } else if (t < levelMax - 100) {
+          messages = [
+            "You're getting better...I think.",
+            "Not bad...try again.",
+            "You'll clinch a perfect score yet!"
+          ]
+        } else {
+          messages = [
+            "Oh wow! If only you held out a little more!",
+            "You're really good! You remind me of me.",
+            "That's close! Have you been practicing?"
+          ]
+        }
+        // Update highscore if new record
+        if (t > parseInt(scores[currentLevel] / 10)) {
+          messages = messages.map((v) => { return v + " New Record!" })
+          scores[currentLevel] = timeElapsed
+          scoreTxtRef.innerHTML = convertTime(timeElapsed)
+          scoreTxtRef.classList.add("blink")
+        }
+      }
+      showRandMsg(messages)
+    }
+
+    function reset() {
+      clearInterval(timerID)
+      timerRef.innerHTML = "0:00"
+      timerActive = false
+      buttonUpdate()
+      timerFade(false)
+      displayMsg(false)
+      timerRef.classList.remove("error-text")
+      scoreTxtRef.classList.remove("blink")
+    }
+
+    function timerFade(fadeout = false) {
+      if (BUNNY_HOOD) return
+      if (fadeout) timerRef.classList.add("fadeout")
+      else timerRef.classList.remove("fadeout")
+    }
+
+    function buttonUpdate() {
+      if (timerActive) {
+        buttonRef.classList.add("timer-active")
+        buttonRef.innerHTML = "STOP!"
+      } else {
+        buttonRef.classList.remove("timer-active")
+        buttonRef.innerHTML = "START!"
+      }
+    }
+
+    function buttonPressed() {
+      if (!canPressButton) return
+      if (!timerActive) {
+        timerStart()
+      } else {
+        timerStop()
+        // Buffer so user doesn't accidentally press the button again before seeing results
+        canPressButton = false
+        setTimeout(() => {
+          canPressButton = true
+        }, 800);
+      }
+    }
+
+    let scoreAnimScrambleI = 0 // Bit hacky
+    let scoreAnimScrambleT = 0 // ...but it works.
+    function changeLevel(val) {
+      if (val == currentLevel) return
+      reset()
+      currentLevel = val
+      // Animate highscore scramble change effect
+      clearInterval(scoreAnimScrambleI)
+      clearTimeout(scoreAnimScrambleT)
+      let scrambledScore = [...convertTime(scores[val])]
+      scoreAnimScrambleI = setInterval(() => {
+        for (let i = 0; i < scrambledScore.length; i++) {
+          if (scrambledScore[i] == ":") continue
+          scrambledScore[i] = randomInt(0, 9, true)
+        }
+        scoreTxtRef.innerHTML = scrambledScore.join("")
+      }, 20);
+      scoreAnimScrambleT = setTimeout(() => {
+        // Show the actual score
+        clearInterval(scoreAnimScrambleI)
+        scoreTxtRef.innerHTML = convertTime(scores[val])
+      }, 750);
+    }
+
+    function displayMsg(msg) {
+      if (msg) {
+        msgRef.classList.add("scaleup")
+        msgRef.innerHTML = msg
+      } else {
+        msgRef.classList.remove("scaleup")
+        msgRef.innerHTML = "*censored*"
+      }
+    }
+
+    // Initialize
+    buttonRef.setAttribute("onclick", "buttonPressed()")
+    buttonRef.innerHTML = "START!"
+    const lvlBtns = [...document.getElementById("lvl-btns").children]
+    lvlBtns.forEach((button, index, arr) => {
+      if (index === 0) {
+        currentLevel = button.value
+        button.checked = true
+      }
+      button.setAttribute("onclick", "changeLevel(this.value)")
+      scores[button.value] = 0
+    })
+    scoreTxtRef.innerHTML = "0:00"
+  </script>
+</body>
+
+</html>

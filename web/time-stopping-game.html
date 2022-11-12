@@ -355,10 +355,10 @@
     }
 
     function convertTime(t) {
-      // Realtime into seconds:deciseconds display
+      // Realtime into seconds:centiseconds display
       const s = parseInt(t / 1000)
-      const d = parseInt((t % 1000) / 10)
-      return s + ":" + (d < 10 ? "0" + d : d)
+      const c = parseInt((t % 1000) / 10)
+      return s + ":" + (c < 10 ? "0" + c : c)
     }
 
     function timerStart() {
@@ -384,7 +384,7 @@
       buttonUpdate()
       clearInterval(timerID)
       timerFade(false)
-      // handle scoring and results
+      // Handle scoring and results
       const t = parseInt(timeElapsed / 10)
       const levelMax = currentLevel * 100
       function showRandMsg(msgs) {
@@ -425,7 +425,7 @@
         if (t < 10) {
           messages = [
             "W-What?! H-How did you stop the timer so fast?!",
-            "Umm...the idea is to get close to the target time, not zero.",
+            "Umm...the idea is to get close to the target time, not to zero.",
             "This ain't whack-a-mole! Stop that!"
           ]
         } else if (t == levelMax) {

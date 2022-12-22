@@ -3,6 +3,9 @@ __doc__ = """CRYPTOGRAM DOCUMENTATION
 
 Encode or decode a cryptogram written in a substitution cipher. A substitution cipher replaces each letter of the alphabet with a different letter. The cipher affects only alphabet letters and works by swapping out each letter with a different one. For example, all A's get changed to 'H' and all T's get changed to 'U' and so on.
 
+----------
+COMMAND LINE USAGE:
+
 At least one (and only one) of the following flags must be used when running this script: -g -p -e -d. The first two simply write out a default cipher keyfile or print out these docs, while the other two are used for encoding and decoding and will need a cipher keyfile and a message to properly run the script.
 
 The message can be provided either as a path to a file with the message inside it, or typed directly into the console as a text string. The message can be either in a decoded or encoded form. The appropriate flag must be set to either encode (-e) or decode (-d) the message.
@@ -40,9 +43,9 @@ cryptogram.py <path/to/keyfile> <path/to/message/file> -o <path/to/output/file> 
 result: Message from file gets decoded with cipher in realtime in interactive mode by user. After exiting the mode, the encoded message is then written to a file at the output path.
 
 ----------
-AS A MODULE:
+MODULE USAGE:
 
-This script can be used as a module to be imported into other python projects. Encoding, decoding and read/write functions can be called directly, and the cipher_key variable can be modified without the need for a keyfile.
+This script can be used as a module to be imported into other python projects. Encoding, decoding and read/write functions can be called directly, and the cipher_key variable can be modified as a dictionary without the need for a keyfile.
 
 ----------
 TIPS:
@@ -73,10 +76,12 @@ Scan for double letters. They're most likely to be LL, followed in frequency by 
 
 import string
 
+# A=Z, B=Y, C=X, etc.
 cipher_key = {k: v for (k, v) in zip(list(string.ascii_uppercase), list(reversed(string.ascii_uppercase)))}
 
 
 def encode(key: dict, message: str):
+    """Encode a plain-text string with the provided cipher key dictionary. Note: The same cipher must be used to both encode and decode a given message."""
     d_keys = list(key.keys())
     string = ""
     for char in message.upper():
@@ -88,6 +93,7 @@ def encode(key: dict, message: str):
 
 
 def decode(key: dict, message: str):
+    """Decode an encrypted string with the provided cipher key dictionary. Note: The same cipher must be used to both encode and decode a given message."""
     reversed_key = {v: k for (k, v) in key.items()}
     d_keys = list(reversed_key.keys())
     string = ""
@@ -100,6 +106,7 @@ def decode(key: dict, message: str):
 
 
 def read_keyfile(file_dir: str):
+    """Read a text file containing a valid cipher key and store the key in the cipher_key variable as a dictionary. The file_dir parameter is a string containing the full or relative path to the file. If the file doesn't exist, an error will be thrown."""
     global cipher_key
     letters_remaining_keys = string.ascii_uppercase
     letters_remaining_vals = string.ascii_uppercase
@@ -115,6 +122,7 @@ def read_keyfile(file_dir: str):
 
 
 def write_keyfile(file_dir: str):
+    """Write the current cipher_key out to a file. The file_dir parameter is a string containing the full or relative path to the file. If the file doesn't exist, it will be created, unless the path is invalid in which case an error will be thrown."""
     key = []
     for k, v in cipher_key.items():
         key.append(f"{k}={v}\n")

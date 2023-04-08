@@ -1,11 +1,10 @@
 # Optimus Primes - can probably be better, but, ugh...
 import math
-import sys
 
 
 def primes(min_num: int, max_num: int):
     '''
-    Generator of prime numbers starting at min and ending at max.
+    Generator of prime numbers starting at min and ending at max. Min will always be at least 2 since there are no primes less than 2.
     '''
     i = min_num if min_num > 1 else 2
     while i <= max_num:
@@ -21,6 +20,7 @@ def primes(min_num: int, max_num: int):
 
 
 if __name__ == "__main__":
+    import sys
     args = len(sys.argv) - 1
     if args > 1:
         num_range = (int(sys.argv[1]), int(sys.argv[2]))

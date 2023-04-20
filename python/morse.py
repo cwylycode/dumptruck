@@ -65,7 +65,7 @@ def morse_encode(message: str):
 
     All ASCII (32-126) characters are accepted with the exceptions of: ~ ` # % ^ * { } [ ] < > \\ |
 
-    Spaces are encoded as / and illegal characters are encoded as * ."""
+    Spaces are encoded as '/' and illegal characters are encoded as '*'."""
     string = ""
     for c in message.upper():
         if c in _code.keys():
@@ -78,9 +78,9 @@ def morse_encode(message: str):
 def morse_decode(message: str):
     """Decode a morse message.
 
-    Message must contain (with no spacing between characters) periods or hyphens(minus symbol) or forward slashes/astericks. Any other characters - including incorrect morse code - will be stripped out from the decoded message. A single space must be used to separate each character in the message.
+    Message must contain (with no spacing between characters) periods or hyphens (minus symbol) or forward slashes/astericks. Any other characters - including incorrect morse code - will be stripped out from the decoded message. A single space must be used to separate each character in the message.
 
-    All decoded alphabet characters will be capitalized, any forward slashes will be interpreted as a single space, and astericks will be decoded as '<err>' to mark an illegal character in the message."""
+    All decoded alphabet characters will be capitalized, any forward slashes will be interpreted as a single space between words, and astericks will be decoded as '<err>' to mark an illegal character in the message."""
     chars, string = message.strip().split(" "), ""
     for c in chars:
         for k, v in _code.items():
@@ -95,6 +95,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
         prog="Morse Code - Encoder/Decoder",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
         description="Encode or decode a message in Morse code. Select an encode or decode option flag and, for the message argument, either provide a message string (with the '-s' flag set), or a text file path containing a message. The encoded/decoded message can then be written out to a file ('-o' flag set), or the console screen.")
     parser.add_argument(
         "message",
@@ -110,11 +111,11 @@ if __name__ == "__main__":
     code_mode = parser.add_mutually_exclusive_group(required=True)
     code_mode.add_argument(
         "-e", "--encode",
-        help="Encode a text message into morse code. All ASCII (32-126) characters are accepted with the following exceptions: '~ ` # % ^ * { } [ ] < > \\ |'. Spaces are encoded as / and illegal characters are encoded as * .",
+        help="Encode a text message into morse code. All ASCII (32-126) characters are accepted with the following exceptions: '~ ` # %% ^ * { } [ ] < > \\ |'. Spaces are encoded as '/' and illegal characters are encoded as '*'.",
         action="store_true")
     code_mode.add_argument(
         "-d", "--decode",
-        help="Decode a morse message. Message must contain (with no spacing between characters) periods or hyphens(minus symbol) or forward slashes/astericks. Any other characters - including incorrect morse code - will be stripped out from the decoded message. A single space must be used to separate each character in the message. All decoded alphabet characters will be capitalized, any forward slashes will be interpreted as a single space, and astericks will be decoded as '<err>' to mark an illegal character in the message.",
+        help="Decode a morse message. Message must contain (with no spacing between characters) periods or hyphens (minus symbol) or forward slashes/astericks. Any other characters - including incorrect morse code - will be stripped out from the decoded message. A single space must be used to separate each character in the message. All decoded alphabet characters will be capitalized, any forward slashes will be interpreted as a single space between words, and astericks will be decoded as '<err>' to mark an illegal character in the message.",
         action="store_true")
     args = parser.parse_args()
 
